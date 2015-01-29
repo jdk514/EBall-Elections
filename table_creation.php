@@ -1,5 +1,5 @@
 <?php
-include "enviornment_variables.php";
+include "environment_variables.php";
 include "header.php";
 /* Script has not been told anything, exit */
 if ($argc <= 1) {

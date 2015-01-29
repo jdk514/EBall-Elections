@@ -1,7 +1,7 @@
 <?php
 /* Need csv file to populate Table */
 if ($argc > 1) {
-	include "enviornment_variables.php";
+	include "environment_variables.php";
 	include "header.php";
 
 	$file = fopen($argv[1], "r");

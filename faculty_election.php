@@ -1,5 +1,5 @@
 <?php
-include "enviornment_variables.php";
+include "environment_variables.php";
 include "header.php";
 logged_in();
 $gwid = $_SESSION["gwid"];

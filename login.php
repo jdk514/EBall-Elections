@@ -3,7 +3,7 @@
 if (isset($_POST['gwid'])) {
 
 	$gwid = $_POST["gwid"];
-	include "enviornment_variables.php";
+	include "environment_variables.php";
 	include "header.php";
 
 	$sql = "SELECT * FROM Students WHERE (gwid='{$gwid}')";
