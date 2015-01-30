@@ -2,7 +2,6 @@
 include "environment_variables.php";
 include "header.php";
 logged_in();
-$gwid = $_SESSION["gwid"];
 
 $sql = "SELECT * FROM Students WHERE (gwid='{$_SESSION['gwid']}')";
 $results = $conn->query($sql);
@@ -11,12 +10,15 @@ $ballots = array();
 /* fetch associative array */
 while ($row = mysqli_fetch_array($results)) {
     if (!$row['faculty_vote']) {
-    	$ballots['Faculty Election'] = "faculty_election";
+    	$ballots['Professor of the Year'] = "professor_of_the_year";
     	//array_push($ballots, "Faculty Election");
     }
     if (!$row['senior_vote']) {
-    	$ballots['Senior Election'] = "senior_election";
+    	$ballots['Senior Award'] = "senior_award";
     	//array_push($ballots, "Senior Election");
+    }
+    if (!$row['fun_vote']) {
+    	$ballots['Fun Award'] = "fun_award";
     }
 }
 
@@ -37,13 +39,17 @@ if (empty($ballots)) {
  	<!-- JS defines button clicks -->
 	<script>
 		$( document ).ready(function() {
-    		$('#faculty_election').click(function(){
+    		$('#professor_of_the_year').click(function(){
 				window.location.href = "faculty_election.php";
 			});
 
-			$('#senior_election').click(function() {
+			$('#senior_award').click(function() {
 				window.location.href = "senior_election.php";
 			});
+
+			$('#fun_award').click(function() {
+				window.location.href = "fun_award.php";
+			})
 		});
 	</script>
 </head>

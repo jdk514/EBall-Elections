@@ -9,9 +9,11 @@ if ($_POST['voted'] == "true") {
 	if (empty($_POST['faculty_vote'])) {
 		$error = 1;
 	} else {
-		$sql = "UPDATE Faculty SET vote_count = vote_count + 1 WHERE id={$_POST['faculty_vote']};
+		$faculty_vote = mysqli_real_escape_string($conn, $_POST['faculty_vote']);
+		$faculty_comment = mysqli_real_escape_string($conn, $_POST['faculty_comment']);
+		$sql = "UPDATE Faculty SET vote_count = vote_count + 1 WHERE id={$faculty_vote};
 		UPDATE Students SET faculty_vote=1 WHERE gwid='{$_SESSION['gwid']}';
-		INSERT INTO Faculty_Comments (fid, comment) VALUES ({$_POST['faculty_vote']}, '{$_POST['faculty_comment']}')";
+		INSERT INTO Faculty_Comments (fid, comment) VALUES (faculty_vote}, '{$faculty_comment}')";
 		echo $sql;
 		if (!$conn->multi_query($sql)) {
 	    	printf("Errormessage: %s\n", $conn->error);
@@ -43,13 +45,13 @@ while ($row = mysqli_fetch_array($results)) {
 <body>
 	<div class="container">
 		<div class="row">
-			<div class="col-md-6 col-md-offset-3">
+			<div class="col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="btn-group pull-left back-icon-btn">
-						<a href="javascript:history.back()" class="btn btn-default"><span class="glyphicon glyphicon-share-alt icon-flipped"></span></a>
+						<a href="ballots.php" class="btn btn-default"><span class="glyphicon glyphicon-share-alt icon-flipped"></span></a>
 					</div>
-					<h3>Faculty Elections</h3>
+					<h3>Professor of the Year</h3>
 				</div>
 				<div class="panel-body">
 				<?php if (!empty($error)) { ?>
@@ -59,6 +61,7 @@ while ($row = mysqli_fetch_array($results)) {
 					You must select a Professor
 				</div>
 				<?php } ?>
+				<h4>Each department votes on the Professor of the Year. The Professor of the Year should demonstrate exemplary work inside and outside the classroom. He or she should go above and beyond to help students achieve their academic goals as well as inspire students to keep pushing towards their engineering futures. Thank you for taking the time to vote. Remember you can vote only once!</h4>
 				<form class="" action="faculty_election.php" method="post">
 					<div class="form-group">
 						<label for="faculty_vote">Which professor would you like to vote for as the Professor of the Year? </label>
@@ -70,7 +73,7 @@ while ($row = mysqli_fetch_array($results)) {
 							}
 						?>
 					  	</select>
-					</div>
+					</div>					
 					<div class="form-group">
 						<label for="faculty_comment">Please describe your reasons for choosing the professor as well as any examples of their
 						outstanding work in and out of the classroom:</label>

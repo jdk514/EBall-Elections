@@ -2,10 +2,10 @@
 
 if (isset($_POST['gwid'])) {
 
-	$gwid = $_POST["gwid"];
 	include "environment_variables.php";
 	include "header.php";
 
+	$gwid = mysqli_real_escape_string($conn, $_POST["gwid"]);
 	$sql = "SELECT * FROM Students WHERE (gwid='{$gwid}')";
 	$results = $conn->query($sql);
 	

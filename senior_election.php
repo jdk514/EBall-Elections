@@ -9,8 +9,13 @@ if ($_POST['voted'] == "true") {
 	if (empty($_POST['nut']) || empty($_POST['bolt']) || empty($_POST['senior_award'])) {
 		$error = 1;
 	} else {
+		$nut = mysqli_real_escape_string($conn, $_POST['nut']);
+		$bolt = mysqli_real_escape_string($conn, $_POST['bolt']);
+		$senior_award = mysqli_real_escape_string($conn, $_POST['senior_award']);
+		$nut_bolt_comment = mysqli_real_escape_string($conn, $_POST['nut_bolt_comment']);
+		$senior_award_comment = mysqli_real_escape_string($conn, $_POST['senior_award_comment']);
 		$sql = "INSERT INTO Senior_Votes (nut, bolt, senior_award, nut_bolt_comment, senior_award_comment)
-				VALUES ('{$_POST['nut']}', '{$_POST['bolt']}', '{$_POST['senior_award']}', '{$_POST['nut_bolt_comment']}', '{$_POST['senior_award_comment']}');
+				VALUES ('{$nut}', '{$bolt}', '{$senior_award}', '{$nut_bolt_comment}', '{$senior_award_comment}');
 				UPDATE Students SET senior_vote = 1 WHERE gwid = '{$_SESSION['gwid']}'";
 		if (!$conn->multi_query($sql)) {
 	    	printf("Errormessage: %s\n", $conn->error);
@@ -96,13 +101,13 @@ while ($row = mysqli_fetch_array($results)) {
 <body>
 	<div class="container">
 			<div class="row">
-				<div class="col-md-6 col-md-offset-3">
+				<div class="col-md-8 col-md-offset-2">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="btn-group pull-left back-icon-btn">
-							<a href="javascript:history.back()" class="btn btn-default"><span class="glyphicon glyphicon-share-alt icon-flipped"></span></a>
+							<a href="ballots.php" class="btn btn-default"><span class="glyphicon glyphicon-share-alt icon-flipped"></span></a>
 						</div>
-						<h3>Senior Elections</h3>
+						<h3>Senior Awards</h3>
 					</div>
 					<div class="panel-body">
 						<?php if (!empty($error)) { ?>
@@ -112,6 +117,7 @@ while ($row = mysqli_fetch_array($results)) {
 							Please choose a Senior in every category
 						</div>
 						<?php } ?>
+						<h4>The senior awards given at E-Ball include the Nut &amp; Bolt Award and Senior of the Year. The Nut &amp; Bolt Award is given to a pair of seniors who exemplify the SEAS community values including a great spirit of friendship. The Senior of the Year Award is given to a senior who excels both inside and outside the classroom, contributes to the SEAS community, and inspires other students to do the same. These awards can be voted on only once; please review your votes carefully before submitting your response. Thank you for voting!</h4>
 						<form action="senior_election.php" method="post">
 							<div class="form-group">
 								<label for="nut">Who would you like to select for the Nut &amp; Bolt Award? Please choose 2 seniors.</label>
@@ -131,7 +137,9 @@ while ($row = mysqli_fetch_array($results)) {
 							  	<textarea class="form-control" name="senior_award_comment"></textarea>
 							</div>
 						  	<input type="hidden" name="voted" value="true">
-						  	<input type="submit">
+						  	<div class="col-md-4 col-md-offset-4">
+								<button type="submit" class="btn btn-primary form-control">Vote!</button>
+							</div>
 						</form>
 					</div>
 				</div>
