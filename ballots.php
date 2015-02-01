@@ -13,7 +13,7 @@ while ($row = mysqli_fetch_array($results)) {
     	$ballots['Professor of the Year'] = "professor_of_the_year";
     	//array_push($ballots, "Faculty Election");
     }
-    if (!$row['senior_vote']) {
+    if (!$row['senior_vote'] && $row['year'] == "Senior") {
     	$ballots['Senior Award'] = "senior_award";
     	//array_push($ballots, "Senior Election");
     }
@@ -73,7 +73,7 @@ if (empty($ballots)) {
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 						<span class="sr-only">Error:</span>
 						<span class="select-major">Current Major: <?php echo $_SESSION['major']?></span>
-						<span class="select-major"><a href="select_major.php">Change Major</a></span>
+						<span class="select-major"><a href="select_major.php">Wrong Major?</a></span>
 					</div>
 					<?php
 						foreach ($ballots as $key=>$value) {

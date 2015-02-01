@@ -23,13 +23,17 @@ if ($_POST['voted'] == "true") {
 	}
 }
 
-// Create the array of faculty members
-$sql = "SELECT * FROM Faculty WHERE (major='{$_SESSION['major']}')";
-$results = $conn->query($sql);
+if ($_SESSION['major'] == "UND") {
+	$no_major = TRUE;
+} else {
+	// Create the array of faculty members
+	$sql = "SELECT * FROM Faculty WHERE (major='{$_SESSION['major']}')";
+	$results = $conn->query($sql);
 
-$faculty_array = array();
-while ($row = mysqli_fetch_array($results)) {	
-	$faculty_array[$row['id']] = $row['name'];
+	$faculty_array = array();
+	while ($row = mysqli_fetch_array($results)) {	
+		$faculty_array[$row['id']] = $row['name'];
+	}
 }
 ?>
 <html>
@@ -54,36 +58,44 @@ while ($row = mysqli_fetch_array($results)) {
 					<h3>Professor of the Year</h3>
 				</div>
 				<div class="panel-body">
-				<?php if (!empty($error)) { ?>
+				<?php if ($no_major) { ?>
 				<div class="alert alert-danger" role="alert">
 					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 					<span class="sr-only">Error:</span>
-					You must select a Professor
+					You must select a major before you can vote!
 				</div>
-				<?php } ?>
-				<h4>Each department votes on the Professor of the Year. The Professor of the Year should demonstrate exemplary work inside and outside the classroom. He or she should go above and beyond to help students achieve their academic goals as well as inspire students to keep pushing towards their engineering futures. Thank you for taking the time to vote. Remember you can vote only once!</h4>
-				<form class="" action="faculty_election.php" method="post">
-					<div class="form-group">
-						<label for="faculty_vote">Which professor would you like to vote for as the Professor of the Year? </label>
-						<select id="faculty_vote" name="faculty_vote">
-							<option value="">Select one...</option>
-						<?php
-							foreach($faculty_array as $id => $faculty) {
-								echo "<option value='{$id}'>{$faculty}</option>";
-							}
-						?>
-					  	</select>
-					</div>					
-					<div class="form-group">
-						<label for="faculty_comment">Please describe your reasons for choosing the professor as well as any examples of their
-						outstanding work in and out of the classroom:</label>
-	  					<textarea class="form-control" id="faculty_comment" name="faculty_comment"></textarea>
-	  				</div>
-	  				<input type="hidden" name="voted" value="true">
-	  				<div class="col-md-4 col-md-offset-4">
-						<button type="submit" class="btn btn-primary form-control">Vote!</button>
+				<?php } else { ?>
+					<?php if (!empty($error)) { ?>
+					<div class="alert alert-danger" role="alert">
+						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<span class="sr-only">Error:</span>
+						You must select a Professor
 					</div>
-				</form>
+					<?php } ?>
+					<h4>Each department votes on the Professor of the Year. The Professor of the Year should demonstrate exemplary work inside and outside the classroom. He or she should go above and beyond to help students achieve their academic goals as well as inspire students to keep pushing towards their engineering futures. Thank you for taking the time to vote. Remember you can vote only once!</h4>
+					<form class="" action="faculty_election.php" method="post">
+						<div class="form-group">
+							<label for="faculty_vote">Which professor would you like to vote for as the Professor of the Year? </label>
+							<select id="faculty_vote" name="faculty_vote">
+								<option value="">Select one...</option>
+							<?php
+								foreach($faculty_array as $id => $faculty) {
+									echo "<option value='{$id}'>{$faculty}</option>";
+								}
+							?>
+						  	</select>
+						</div>					
+						<div class="form-group">
+							<label for="faculty_comment">Please describe your reasons for choosing the professor as well as any examples of their
+							outstanding work in and out of the classroom:</label>
+		  					<textarea class="form-control" id="faculty_comment" name="faculty_comment"></textarea>
+		  				</div>
+		  				<input type="hidden" name="voted" value="true">
+		  				<div class="col-md-4 col-md-offset-4">
+							<button type="submit" class="btn btn-primary form-control">Vote!</button>
+						</div>
+					</form>
+				<?php } ?>
 				</div>
 			</div>
 			</div>

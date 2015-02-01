@@ -16,11 +16,10 @@ if (isset($_POST['gwid'])) {
 
 		// Determine their major and set it in the session
 		while ($row = mysqli_fetch_array($results)) {
-			if ($row['major'] == "Undeclared" || $row['major'] == NULL) {
+			$_SESSION['major'] = $row['major'];
+			if ($row['major'] == "UND" || $row['major'] == NULL) {
 				header('Location: select_major.php');
 				exit;
-		    } else {
-		    	$_SESSION['major'] = $row['major'];
 		    }
 		}
 
@@ -52,8 +51,14 @@ if (isset($_POST['gwid'])) {
 				<h3>E-Ball Award Elections</h3>
 			</div>
 			<div class="panel-body panel-body-center">
+			<?php if ($error != NULL) { ?>
+				<div class="alert alert-danger" role="alert">
+					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+					<span class="sr-only">Error:</span>
+					Your GWID does not match any on record
+				</div>
+			<?php } ?>
 			<form class="form-inline" action="login.php" method="post">
-				<?php if ($error != NULL) { echo "<p>{$error}</p>"; } ?>
 				<div class="form-group">
 					<label for="gwid">GWID: </label>
 					<input class="form-control" type="text" name="gwid" id="gwid"><br>

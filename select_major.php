@@ -3,9 +3,7 @@ include "environment_variables.php";
 include "header.php";
 logged_in();
 $gwid = $_SESSION["gwid"];
-
-if (isset($_POST)) {
-	var_dump();
+if (!empty($_POST)) {
 	if (empty($_POST['major'])) {
 		$error = 1;
 	} else {
@@ -39,14 +37,11 @@ if (isset($_POST)) {
 			<div class="col-md-6 col-md-offset-3">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<div class="btn-group pull-left back-icon-btn">
-						<a href="javascript:history.back()" class="btn btn-default"><span class="glyphicon glyphicon-share-alt icon-flipped"></span></a>
-					</div>
 					<h3>Select Your Major</h3>
 				</div>
 				<div class="panel-body">
 					<?php if (!empty($error)) { ?>
-						<div class="alert alert-warning" role="alert">
+						<div class="alert alert-danger" role="alert">
 							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 							<span class="sr-only">Error:</span>
 							Please choose a Major

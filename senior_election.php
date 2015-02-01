@@ -50,7 +50,8 @@ while ($row = mysqli_fetch_array($results)) {
 	 	data = [
 	 	<?php
 	 		foreach ($student_array as $student) {
-	 			echo "'$student',";
+	 			$student_clean = json_encode($student);
+	 			echo "{$student_clean},";
 	 		}
 	 	?>
 	 	]
