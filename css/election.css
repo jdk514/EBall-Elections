@@ -8,8 +8,10 @@
 	margin-bottom: 10px;
 }
 
-.panel-heading{
+.panel .panel-heading {
 	text-align: center;
+	background-color: #004065;
+	color: #fffffe;
 }
 
 .panel-heading h3 {
@@ -20,9 +22,35 @@
 	padding: 12px 14px;
 }
 
+.btn-primary {
+	background-color: #004065;
+}
+
 .back-icon-btn {
-	margin-left: -16px;
-	margin-top: -11px;
+	margin-left: -15px;
+	margin-top: -10px;
+	border-radius: 25px;
+}
+
+.back-btn {
+	background-color: #005181;
+	border: none;
+}
+
+.back-btn:hover {
+	background-color: #0064A0;
+}
+
+.glyphicon-share-alt {
+	color: #fffffe;
+}
+
+.alert-warning {
+	background-color: #FFFDF9;
+}
+
+.panel-body {
+	background-color: #FFF6DA;
 }
 
 .panel-body-center {

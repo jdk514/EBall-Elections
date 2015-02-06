@@ -9,17 +9,15 @@ $results = $conn->query($sql);
 $ballots = array();
 /* fetch associative array */
 while ($row = mysqli_fetch_array($results)) {
-    if (!$row['faculty_vote']) {
+    if (!$row['faculty_vote'] && !$_SESSION['faculty_vote']) {
     	$ballots['Professor of the Year'] = "professor_of_the_year";
     	//array_push($ballots, "Faculty Election");
     }
-    if (!$row['senior_vote'] && $row['year'] == "Senior") {
+    if (!$row['senior_vote'] && $row['year'] == "Senior" && !$_SESSION['senior_vote']) {
     	$ballots['Senior Award'] = "senior_award";
     	//array_push($ballots, "Senior Election");
     }
-    if (!$row['fun_vote']) {
-    	$ballots['Fun Award'] = "fun_award";
-    }
+    $ballots['Fun Award'] = "fun_award";
 }
 
 if (empty($ballots)) {
@@ -71,9 +69,8 @@ if (empty($ballots)) {
 					<?php } else { ?>
 					<div class="alert alert-warning" role="alert">
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-						<span class="sr-only">Error:</span>
 						<span class="select-major">Current Major: <?php echo $_SESSION['major']?></span>
-						<span class="select-major"><a href="select_major.php">Wrong Major?</a></span>
+						<span class="select-major"><a href="select_major.php">Click here if incorrect</a></span>
 					</div>
 					<?php
 						foreach ($ballots as $key=>$value) {

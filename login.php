@@ -17,6 +17,13 @@ if (isset($_POST['gwid'])) {
 		// Determine their major and set it in the session
 		while ($row = mysqli_fetch_array($results)) {
 			$_SESSION['major'] = $row['major'];
+			$_SESSION['fun_vote'] = $row['fun_vote'];
+			$_SESSION['faculty_vote'] = $row['faculty_vote'];
+			if ($row['year'] == "Senior") {
+				$_SESSION['senior_vote'] = $row['senior_vote'];
+			} else {
+				$_SESSION['senior_vote'] = 1;
+			}
 			if ($row['major'] == "UND" || $row['major'] == NULL) {
 				header('Location: select_major.php');
 				exit;
@@ -29,7 +36,6 @@ if (isset($_POST['gwid'])) {
 		$error = "Your GWID does not match any on record";
 	}
 }
-
 ?>
 
 <html>
@@ -58,12 +64,13 @@ if (isset($_POST['gwid'])) {
 					Your GWID does not match any on record
 				</div>
 			<?php } ?>
+			<h4>Welcome to the Engineer's Ball 2015 Elections. Upon a successful log-in you will be presented with three possible categories; Professor of the Year, Senior Awards (Seniors only), and Fun Awards. <strong>Log-in using your GWid.</strong></h4>
 			<form class="form-inline" action="login.php" method="post">
 				<div class="form-group">
 					<label for="gwid">GWID: </label>
 					<input class="form-control" type="text" name="gwid" id="gwid"><br>
 				</div>
-				<button type="submit" class="btn btn-default">Login</button>
+				<button type="submit" class="btn btn-primary">Login</button>
 			</form>
 			</div>
 		</div>

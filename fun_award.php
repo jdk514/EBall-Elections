@@ -6,9 +6,11 @@ $gwid = $_SESSION["gwid"];
 
 // If they submitted a vote, process the vote
 if ($_POST['voted'] == "true") {
+	/* From validation, must submit value for every element */
 	if (empty($_POST['award']) || empty($_POST['student']) || empty($_POST['comment'])) {
 		$error = 1;
 	} else {
+		/* clean inputs and submit them to DB */
 		$award = mysqli_real_escape_string($conn, $_POST['award']);
 		$student = mysqli_real_escape_string($conn, $_POST['student']);
 		$comment = mysqli_real_escape_string($conn, $_POST['comment']);
@@ -16,11 +18,15 @@ if ($_POST['voted'] == "true") {
 				VALUES ('{$award}', '{$student}', '{$comment}');
 				UPDATE Students SET fun_vote = 1 WHERE gwid = '{$_SESSION['gwid']}'";
 		if (!$conn->multi_query($sql)) {
+	    	/* If error found print and remain on page */
 	    	printf("Errormessage: %s\n", $conn->error);
 	    	exit;
+		} else {
+			/* On success redirect to ballots */
+			$_SESSION['fun_vote'] = 1;
+			header('Location: ballots.php');
+			exit;
 		}
-		header('Location: ballots.php');
-		exit;
 	}
 }
 
@@ -48,7 +54,8 @@ while ($row = mysqli_fetch_array($results)) {
 	 	data = [
 	 	<?php
 	 		foreach ($student_array as $student) {
-	 			echo "'$student',";
+	 			$student_clean = json_encode($student);
+	 			echo "{$student_clean},";
 	 		}
 	 	?>
 	 	]
@@ -76,7 +83,7 @@ while ($row = mysqli_fetch_array($results)) {
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="btn-group pull-left back-icon-btn">
-							<a href="ballots.php" class="btn btn-default"><span class="glyphicon glyphicon-share-alt icon-flipped"></span></a>
+							<a href="ballots.php" class="btn btn-default back-btn"><span class="glyphicon glyphicon-share-alt icon-flipped"></span></a>
 						</div>
 						<h3>Fun Awards!!</h3>
 					</div>
@@ -92,15 +99,15 @@ while ($row = mysqli_fetch_array($results)) {
 						<form action="fun_award.php" method="post">
 							<div class="form-group">
 							  	<label for="award">Award Name:</label>
-								<input type="text" id="award" name="award">
+								<input type="text" id="award" name="award" value="<?php echo $_POST['award']; ?>">
 							</div>
 							<div class="form-group">
 							  	<label for="student">Student Nominee:</label>
-								<input id="student" name="student">
+								<input id="student" name="student" value="<?php echo $_POST['student']; ?>">
 							</div>
 							<div class="form-group">
 								<label for"comment">Please describe why you have chosen to nominate the above student for the award?</label>
-							  	<textarea class="form-control" name="comment"></textarea>
+							  	<textarea class="form-control" name="comment"><?php echo $_POST['comment']; ?></textarea>
 							</div>
 						  	<input type="hidden" name="voted" value="true">
 						  	<div class="col-md-4 col-md-offset-4">

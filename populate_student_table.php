@@ -4,19 +4,37 @@ if ($argc > 1) {
 	include "environment_variables.php";
 	include "header.php";
 
+	$year_array = array(
+		"201501" => "Freshman",
+		"201403" => "Freshman",
+		"201401" => "Sophomore",
+		"201303" => "Sophomore",
+		"201301" => "Junior",
+		"201203" => "Junior"
+	);
+
 	$file = fopen($argv[1], "r");
 	while(! feof($file)) {
 		$data = fgetcsv($file);
-		$gwid = mysqli_real_escape_string($conn, $data[0]);
-		$firstname = mysqli_real_escape_string($conn, $data[1]);
-		$lastname = mysqli_real_escape_string($conn, $data[2]);
-		$major = mysqli_real_escape_string($conn, $data[3]);
-		$year = mysqli_real_escape_string($conn, $data[4]);
-		$sql = "INSERT INTO Students (gwid, firstname, lastname, major, year) VALUES ('{$gwid}', '{$firstname}', '{$lastname}', '{$major}', '{$year}')";
-		if ($conn->query($sql) === TRUE) {
-	    	echo "New record created successfully";
-		} else {
-	    	echo "Error: " . $sql . "<br>" . $conn->error;
+		if (!empty($data)) {
+			$gwid = mysqli_real_escape_string($conn, $data[0]);
+			$firstname = mysqli_real_escape_string($conn, $data[1]);
+			$lastname = mysqli_real_escape_string($conn, $data[2]);
+			$major = mysqli_real_escape_string($conn, $data[3]);
+			$date = mysqli_real_escape_string($conn, $data[4]);
+
+			if (isset($year_array[$date])) {
+				$year = $year_array[$date];
+			} else {
+				$year = "Senior";
+			}
+
+			$sql = "INSERT INTO Students (gwid, firstname, lastname, major, year) VALUES ('{$gwid}', '{$firstname}', '{$lastname}', '{$major}', '{$year}')";
+			if ($conn->query($sql) === TRUE) {
+		    	echo "New record created successfully";
+			} else {
+		    	echo "Error: " . $sql . "<br>" . $conn->error;
+			}
 		}
 	}
 /* If no file provided, detail help information */

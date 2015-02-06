@@ -2,13 +2,16 @@
 include "environment_variables.php";
 include "header.php";
 logged_in();
+voted("senior_vote");
 $gwid = $_SESSION["gwid"];
 
 // If they submitted a vote, process the vote
 if ($_POST['voted'] == "true") {
+	/* Form validation, must submit entry for every element */
 	if (empty($_POST['nut']) || empty($_POST['bolt']) || empty($_POST['senior_award'])) {
 		$error = 1;
 	} else {
+		/* clean values before submitting votes to DB */
 		$nut = mysqli_real_escape_string($conn, $_POST['nut']);
 		$bolt = mysqli_real_escape_string($conn, $_POST['bolt']);
 		$senior_award = mysqli_real_escape_string($conn, $_POST['senior_award']);
@@ -18,11 +21,15 @@ if ($_POST['voted'] == "true") {
 				VALUES ('{$nut}', '{$bolt}', '{$senior_award}', '{$nut_bolt_comment}', '{$senior_award_comment}');
 				UPDATE Students SET senior_vote = 1 WHERE gwid = '{$_SESSION['gwid']}'";
 		if (!$conn->multi_query($sql)) {
+			/* If error print error and do not change page */
 	    	printf("Errormessage: %s\n", $conn->error);
 	    	exit;
+		} else {
+			/* upon success direct back to ballots */
+			$_SESSION['senior_vote'] = 1;
+			header('Location: ballots.php');
+			exit;
 		}
-		header('Location: ballots.php');
-		exit;
 	}
 }
 
@@ -30,6 +37,7 @@ if ($_POST['voted'] == "true") {
 $sql = "SELECT * FROM Students WHERE (year='Senior')";
 $results = $conn->query($sql);
 
+/* populate student arrary from students table in DB */
 $student_array = array();
 while ($row = mysqli_fetch_array($results)) {
 	$student_array[] = $row['firstname'] . " " . $row['lastname'];
@@ -106,7 +114,7 @@ while ($row = mysqli_fetch_array($results)) {
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="btn-group pull-left back-icon-btn">
-							<a href="ballots.php" class="btn btn-default"><span class="glyphicon glyphicon-share-alt icon-flipped"></span></a>
+							<a href="ballots.php" class="btn btn-default back-btn"><span class="glyphicon glyphicon-share-alt icon-flipped"></span></a>
 						</div>
 						<h3>Senior Awards</h3>
 					</div>
@@ -122,20 +130,20 @@ while ($row = mysqli_fetch_array($results)) {
 						<form action="senior_election.php" method="post">
 							<div class="form-group">
 								<label for="nut">Who would you like to select for the Nut &amp; Bolt Award? Please choose 2 seniors.</label>
-								<input id="nut_autocomplete" name="nut">
-								<input id="bolt_autocomplete" name="bolt">
+								<input id="nut_autocomplete" name="nut" value="<?php echo $_POST['nut']; ?>">
+								<input id="bolt_autocomplete" name="bolt" value="<?php echo $_POST['bolt']; ?>">
 							</div>
 							<div class="form-group">
-							  	<label for"nut_bolt_comment">Please describe your reasons for choosing the professor as well as any examples of their outstanding work in and out of the classroom.</label>
-							  	<textarea class="form-control" name="nut_bolt_comment"></textarea>
+							  	<label for"nut_bolt_comment">Please describe your reasons for choosing this pair of seniors:</label>
+							  	<textarea class="form-control" name="nut_bolt_comment"><?php echo $_POST['nut_bolt_comment']; ?></textarea>
 							</div>
 							<div class="form-group">
 							  	<label for="senior_award">Who would you like to select for the Senior of the Year Award?</label>
-								<input id="senior_award_autocomplete" name="senior_award">
+								<input id="senior_award_autocomplete" name="senior_award" value="<?php echo $_POST['senior_award']; ?>">
 							</div>
 							<div class="form-group">
-								<label for"senior_award">Please describe your reasons for choosing the professor as well as any examples of their outstanding work in and out of the classroom.</label>
-							  	<textarea class="form-control" name="senior_award_comment"></textarea>
+								<label for"senior_award">Please describe your reasons for choosing this senior:</label>
+							  	<textarea class="form-control" name="senior_award_comment"><?php echo $_POST['senior_award_comment']; ?></textarea>
 							</div>
 						  	<input type="hidden" name="voted" value="true">
 						  	<div class="col-md-4 col-md-offset-4">
